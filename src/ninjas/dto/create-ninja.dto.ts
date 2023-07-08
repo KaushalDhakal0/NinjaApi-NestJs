@@ -12,7 +12,8 @@ export class User {
     name: string;
     weapon: string;
   
-    constructor(data: { name: string; weapon: string }) {
+    constructor(data: { name: string; weapon: string ; id:number}) {
+      this.id = data.id;
       this.name = data.name;
       this.weapon = data.weapon;
     }

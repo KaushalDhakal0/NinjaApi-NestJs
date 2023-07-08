@@ -1,1 +1,5 @@
-export class Ninja {}
+export class Ninja {
+    id:number;
+    name:string;
+    weapon:string;
+}
