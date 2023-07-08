@@ -1,28 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import { CreateNinjaDto } from './dto/create-ninja.dto';
+import { CreateNinjaDto, User } from './dto/create-ninja.dto';
 import { UpdateNinjaDto } from './dto/update-ninja.dto';
 
 @Injectable()
 export class NinjasService {
+  private ninjas = [
+    {id:0, name:'Ninja A', weapon: 'stars'},
+    {id:1, name:'Ninja B', weapon: 'space'},
+  ]
   create(createNinjaDto: CreateNinjaDto) {
-    return {
-      name:createNinjaDto.name,
-    };
+    const newData = {
+      ...createNinjaDto,
+      id:Date.now(),
+    }
+    this.ninjas.push(newData);
+    return createNinjaDto;
   }
 
-  findAll(type:string) {
-    return `This action returns all ninjas with type = ${type}`;
+  findAll(weapon:string) {
+    if(weapon){
+      return this.ninjas.filter(dta => dta.weapon === weapon);
+    }
+    return this.ninjas;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} ninja`;
+    const ninja = this.ninjas.find(dta => dta.id === id);
+    if(!ninja){
+      throw new Error('Ninja not found');
+    }
+    return ninja;
   }
 
   update(id: number, updateNinjaDto: UpdateNinjaDto) {
-    return `This action updates a #${id} ninja : ${updateNinjaDto.name} and mY age is ${updateNinjaDto.age}`;
+    return this.ninjas = this.ninjas.map(dta => {
+      if(dta.id === id){
+        return{ ...dta, ...updateNinjaDto};
+      }
+      return this.findOne(id);
+    })
   }
 
   remove(id: number) {
-    return `This action removes a #${id} ninja`;
+    const updatedData  =  this.ninjas.filter(dta => dta.id != id);
+    this.ninjas = updatedData;
+    return this.ninjas;
   }
 }

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { NinjasService } from './ninjas.service';
-import { CreateNinjaDto } from './dto/create-ninja.dto';
+import { CreateNinjaDto, User } from './dto/create-ninja.dto';
 import { UpdateNinjaDto } from './dto/update-ninja.dto';
 
 @Controller('ninjas')
@@ -13,13 +13,13 @@ export class NinjasController {
   }
 
   @Get()
-  findAll(@Query('type') type: string) {
-    return this.ninjasService.findAll(type);
+  findAll(@Query('weapon') weapon: string) {
+    return this.ninjasService.findAll(weapon);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.ninjasService.findOne(+id);
+     return this.ninjasService.findOne(+id);
   }
 
   @Patch(':id')
