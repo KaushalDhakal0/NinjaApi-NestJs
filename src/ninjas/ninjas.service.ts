@@ -29,10 +29,15 @@ export class NinjasService {
     if(!ninja){
       throw new Error('Ninja not found');
     }
-    return ninja;
+    return new User(ninja);
   }
 
   update(id: number, updateNinjaDto: UpdateNinjaDto) {
+    const ninjaToUpdate = this.ninjas.find(dta => dta.id===id);
+    console.log(ninjaToUpdate);
+    if(!ninjaToUpdate){
+      throw new Error("Ninja Not Found while Updating");
+    }
     return this.ninjas = this.ninjas.map(dta => {
       if(dta.id === id){
         return{ ...dta, ...updateNinjaDto};

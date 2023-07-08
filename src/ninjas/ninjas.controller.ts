@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, NotFoundException, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { NinjasService } from './ninjas.service';
 import { CreateNinjaDto, User } from './dto/create-ninja.dto';
 import { UpdateNinjaDto } from './dto/update-ninja.dto';
@@ -8,7 +8,7 @@ export class NinjasController {
   constructor(private readonly ninjasService: NinjasService) {}
 
   @Post()
-  create(@Body() createNinjaDto: CreateNinjaDto) {
+  create(@Body(new ValidationPipe()) createNinjaDto: CreateNinjaDto) {
     return this.ninjasService.create(createNinjaDto);
   }
 
@@ -18,17 +18,25 @@ export class NinjasController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-     return this.ninjasService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+     try {
+      return this.ninjasService.findOne(id);
+     } catch (error) {
+      return new NotFoundException(error);
+     }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateNinjaDto: UpdateNinjaDto) {
-    return this.ninjasService.update(+id, updateNinjaDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateNinjaDto: UpdateNinjaDto) {
+    try {
+      return this.ninjasService.update(+id, updateNinjaDto);
+    } catch (error) {
+      return new NotFoundException(error); 
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ninjasService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.ninjasService.remove(id);
   }
 }
